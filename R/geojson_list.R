@@ -378,7 +378,7 @@ donotnull <- function(x, fun, ...) {
 #' @export
 geojson_list.sf <- function(input, lat = NULL, lon = NULL, group = NULL,
   geometry = "point", type = "FeatureCollection",
-  convert_wgs84 = FALSE, crs = NULL, ...) {
+  convert_wgs84 = FALSE, crs = NULL, precision = NULL, ...) {
   if (convert_wgs84) {
     input <- convert_wgs84(input, crs)
   }
@@ -395,7 +395,8 @@ geojson_list.sf <- function(input, lat = NULL, lon = NULL, group = NULL,
                      function(i) {
                        list(type = "Feature",
                             properties = as.list(attr_df[i, , drop = FALSE]),
-                            geometry = unclass(geojson_list(sfc[[i]]))
+                            geometry = unclass(geojson_list(sfc[[i]])),
+                            geometry$coordinates[[1]] <- round(geometry$coordinates[[1]], digits = precision)
                        )
                      })
 
